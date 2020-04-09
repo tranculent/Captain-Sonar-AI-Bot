@@ -111,12 +111,11 @@ class Player {
             List<Character> validMoves = validDirections(x, y, height, width, islandLocations);
             
             if (spawn++ == 0) visitedLocations.add(new Location(x, y));
-            
             if (!sonarResult.equals("NA")) {
                 
             } 
-            else {
-                int random;
+             else {
+               int random;
                 if (!validMoves.isEmpty()) {
                     random = new Random().nextInt(validMoves.size());
                     if (validMoves.get(random) == 'E') {
@@ -133,12 +132,19 @@ class Player {
                     }
                     
                     List<Location> temp = getAvailableTorpedoLocations(x, y, height, width, islandLocations);
-                    
-                    for (Location l : temp) {
-                     System.err.println("x: " + l.x + " ; y:" + l.y);   
+                
+                    numberOfMoves++;
+                    if (numberOfMoves == 2) {
+                        int randomTorpedoLocation = new Random().nextInt(temp.size());
+                        Location finalTorpedoLocation = temp.get(randomTorpedoLocation);
+    
+                        System.out.println("MOVE " + validMoves.get(random) + " TORPEDO" + " | " +"TORPEDO " + finalTorpedoLocation.x + " " + finalTorpedoLocation.y);
+                        numberOfMoves = 0;
                     }
-                    
-                    System.out.println("MOVE " + validMoves.get(random) + " TORPEDO");
+                    else {
+                        
+                        System.out.println("MOVE " + validMoves.get(random) + " TORPEDO");
+                    }
                 }
                 else {
                     System.out.println("SURFACE");
@@ -210,17 +216,9 @@ class Player {
     public static List<Location> getAvailableTorpedoLocations(int x, int y, int height, int width, Map<Location, Character> islandLocations) {
         List<Location> availableTorpedoLocations = new ArrayList<Location>();
         int radius = 4;
-        int east = x, west = x;
-        int south = y, north = y;
-            
-        int northRow = y > 0 ? y - 1 : 0;
-        int eastRow = x < width - 1 ? x + 1 : width - 1;
-        int westRow = x > 0 ? x - 1 : 0;
-        int southRow = y < height - 1 ? y + 1 : height;
-        
+                
         // handle NorthEast
         int copyX = x;
-        System.err.println("North West: ");
         for (int i = y - 5; i < y; i++) {
             int copyI = i;
             
@@ -238,7 +236,6 @@ class Player {
         
         // handle NorthWest
         int copyX1 = x;
-        System.err.println("North East: ");
         for (int i = y + 5; i > y; i--) {
             int copyI = i;
             
@@ -257,7 +254,6 @@ class Player {
         // handle SouthWest
         int copyX3 = x - 5;
         int counter = 0;
-        System.err.println("South West: ");
         for (int i = y; i < y + 5; i++) {
             int copyI = i;
             while (copyX3++ < x) {
@@ -275,7 +271,6 @@ class Player {
         
         // handle SouthEast
         int copyX2 = x;
-        System.err.println("South East: ");
         for (int i = y + 5; i > y; i--) {
             int copyI = i;
             
