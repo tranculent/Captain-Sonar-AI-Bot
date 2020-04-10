@@ -107,6 +107,7 @@ class Player {
                 in.nextLine();
             }
             String opponentOrders = in.nextLine();
+            System.err.println("Opponent orders: " + sonarResult);
             
             List<Character> validMoves = validDirections(x, y, height, width, islandLocations);
             
@@ -134,15 +135,32 @@ class Player {
                     List<Location> temp = getAvailableTorpedoLocations(x, y, height, width, islandLocations);
                 
                     numberOfMoves++;
+                    
+                    // if y + 2 == 'x' or visited, do not go to y + 1
+                    // if y - 2 == 'x' or visited, do not go to y - 1
+                    
+                    
                     if (numberOfMoves == 2) {
                         int randomTorpedoLocation = new Random().nextInt(temp.size());
                         Location finalTorpedoLocation = temp.get(randomTorpedoLocation);
-    
-                        System.out.println("MOVE " + validMoves.get(random) + " TORPEDO" + " | " +"TORPEDO " + finalTorpedoLocation.x + " " + finalTorpedoLocation.y);
-                        numberOfMoves = 0;
+                        
+                        if ((finalTorpedoLocation.x != x && finalTorpedoLocation.y != y)
+                        || (finalTorpedoLocation.x != x - 1 && finalTorpedoLocation.y != y) 
+                        || (finalTorpedoLocation.x != x + 1 && finalTorpedoLocation.y != y) 
+                        || (finalTorpedoLocation.y != y - 1 && finalTorpedoLocation.x != x)
+                        || (finalTorpedoLocation.y != y + 1 && finalTorpedoLocation.x != x)
+                        || (finalTorpedoLocation.equals(new Location(x - 1, y - 1)))
+                        || (finalTorpedoLocation.equals(new Location(x + 1, y - 1)))
+                        || (finalTorpedoLocation.equals(new Location(x - 1, y + 1)))
+                        || (finalTorpedoLocation.equals(new Location(x + 1, y + 1)))) {
+                            System.out.println("MOVE " + validMoves.get(random) + " TORPEDO" + " | " +"TORPEDO " + finalTorpedoLocation.x + " " + finalTorpedoLocation.y);
+                            numberOfMoves = 0;
+                        }
+                        else {
+                            System.out.println("MOVE " + validMoves.get(random) + " TORPEDO");
+                        }
                     }
                     else {
-                        
                         System.out.println("MOVE " + validMoves.get(random) + " TORPEDO");
                     }
                 }
@@ -152,6 +170,59 @@ class Player {
                     visitedLocations.add(new Location(x, y));
                 }
             }
+        }
+    }
+    
+    public static List<Location> findBestPath(int startingX, int startingY, int height, int width, Map<Location, Character> islandLocations) {
+        List<Location> path = new ArrayList<>();
+        // start from less than the half of screen if x is below 7
+        if (startingX < (width - 1) / 2f) {
+            // start looping from 7 until the end of screen
+            for (int i = startingX; i < width; i++) {
+                // check if each of the x's till the end of the screen is valid (no 'x' or is not visited)
+                if (islandLocations.get(new Location(i, startingY)) != 'x' && !visitedLocations.containsKey(new Location(i, startingY)) {
+                    path.add(new Location(i, startingY));
+                }
+                // if the x is not valid
+                else {
+                    break;
+                }
+                    
+            }
+            
+            int yCounter = 0;
+            Location lastPathLocation = path.get(path.size()-1));
+            if (islandLocations.get(new Location(lastPathLocation.x, lastPathLocation.y + 1))) != 'x' && !visitedLocations.containsKey(new Location(lastPathLocation.x, lastPathLocation.y + 1)))) {
+                if (lastPathLocation.x < (width - 1) / 2f) {
+                    for (int i = lastPathLocation.x; i < width; i++) {
+                        if (islandLocations.get(new Location(i, lastPathLocation.y + 1))) != 'x' && !visitedLocations.containsKey(new Location(i, lastPathLocation.y + 1)))) {
+                            path.add(new Location(i, lastPathLocation.y+1));   
+                        }
+                    }
+                }
+            }
+            else {
+                
+            }
+            
+            if (islandLocations.get(new Location(i, startingY + 1)) != 'x' && !visitedLocations.containsKey(new Location(i, startingY + 1))) {
+                if (i < (width - 1) / 2f) {
+                    for (int j = i; j < width - 1; j++) {
+                       if (islandLocations.get(new Location(j, startingY + 1)) != 'x' && !visitedLocations.containsKey(new Location(j, startingY + 1))) {
+                           path.add(new Location(j, startingY + 1));
+                       }
+                       else {
+                               
+                       }
+                    }
+                }
+                else {
+                    
+                }
+            }
+        }
+        else {
+            
         }
     }
     
